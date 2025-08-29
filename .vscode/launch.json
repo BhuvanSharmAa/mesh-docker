@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Controller (Local)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/controller.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PROM_URL": "http://localhost:9090",
+        "NAMESPACE": "default",
+        "POLICY_FILE": "${workspaceFolder}/policy.yaml",
+        "ENVOY_CM": "envoy-config",
+        "DEPLOY": "service-b"
+      },
+      "justMyCode": false,
+      "preLaunchTask": "Port-forward Prometheus"
+    }
+  ]
+}

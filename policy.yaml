@@ -1,0 +1,3 @@
+service-b:
+  url: "http://service-b:5000/health"
+  action: "restart"

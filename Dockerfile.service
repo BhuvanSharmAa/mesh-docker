@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY service_b.py .
+
+RUN pip install flask prometheus_client
+
+EXPOSE 5000
+
+CMD ["python", "service_b.py"]

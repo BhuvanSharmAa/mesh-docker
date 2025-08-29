@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Create kind cluster", "type":"shell","command":"kind create cluster --name selfheal","problemMatcher": [] },
+    { "label": "Build Docker Image", "type":"shell","command":"docker build -t selfheal/service:latest -f Dockerfile.service .","problemMatcher": [] },
+    { "label": "Kind: load docker-image","type":"shell","command":"kind load docker-image selfheal/service:latest --name selfheal","problemMatcher": [] },
+    { "label": "Apply k8s manifests","type":"shell","command":"kubectl apply -f k8s/","problemMatcher": [] },
+    { "label": "Create envoy configmap (apply local file)","type":"shell","command":"kubectl create configmap envoy-config --from-file=envoy.yaml -o yaml --dry-run=client | kubectl apply -f -","problemMatcher": [] },
+    { "label": "Port-forward Prometheus","type":"shell","command":"kubectl port-forward svc/prometheus 9090:9090","isBackground": true,"problemMatcher":{"owner":"prom-port-forward","pattern":{"regexp":"Forwarding from"},"background":{"activeOnStart":true,"beginsPattern":"Forwarding from","endsPattern":""}} },
+    { "label": "Start loadgen","type":"shell","command":"kubectl run loadgen --image=selfheal/service:latest --restart=Never --env=\"TARGET=http://service-b:80/work\" --command -- python service_a.py","problemMatcher": [] },
+    { "label": "Chaos: inject latency (env var)","type":"shell","command":"kubectl set env deployment/service-b ART_LAT=0.6","problemMatcher": [] },
+    { "label": "Chaos: remove latency","type":"shell","command":"kubectl set env deployment/service-b ART_LAT-","problemMatcher": [] }
+  ]
+}
